@@ -1,0 +1,83 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.amplify-button.amplify-button--primary {
+  background-color: #EC7445;
+  border-color: #EC7445;
+  color: white;
+  margin-bottom: 20px; /* Adjust the value to control the space below the button */
+}
+
+.amplify-field-group__control .amplify-button--primary {
+  background-color: #EC7445;
+  border-color: #EC7445;
+  color: white;
+  margin-bottom: 20px; /* Adjust the value to control the space below the button */
+}
+
+.amplify-button.amplify-button--primary:hover {
+  background-color: #D6663E;
+  border-color: #D6663E;
+}
+
+.amplify-button.amplify-button--primary:active {
+  background-color: #C15A37;
+  border-color: #C15A37;
+}
+/* Custom class for the button */
+.custom-button {
+  background-color: #EC7445;
+  border-color: #EC7445;
+  color: white;
+  margin-top: 20px; /* Add top margin to create space above the button */
+}
+
+.custom-button:hover {
+  background-color: #D6663E;
+  border-color: #D6663E;
+}
+
+.custom-button:active {
+  background-color: #C15A37;
+  border-color: #C15A37;
+}
