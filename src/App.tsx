@@ -78,21 +78,6 @@ function App() {
     fetchDataAndProcess();
   }, []);
 
-  //---------Función para encontrar el valor de un campo dado su clave
-  function obtenerValorCampo(objeto: Record<string, any>, campo: string): any {
-    for (const clave in objeto) {
-      if (clave.includes(campo)) {
-        return objeto[clave];
-      } else if (typeof objeto[clave] === "object" && objeto[clave] !== null) {
-        const resultadoRecursivo = obtenerValorCampo(objeto[clave], campo);
-        if (resultadoRecursivo !== undefined) {
-          return resultadoRecursivo;
-        }
-      }
-    }
-    return undefined; // Añadir un valor de retorno para el caso cuando no se encuentra el campo
-  }
-
 
   const fetchCreateLiveness = async () => {
     try {
@@ -205,6 +190,7 @@ function App() {
         <div>
           <h1>Aquí continúa el flujo luego de la verificación</h1>
           {address}
+          {nombre}
         </div>
       ) : screen === 'notLive' ? (
         <div>
