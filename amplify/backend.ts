@@ -10,15 +10,12 @@ import {
 import { Policy, PolicyStatement, Role } from "aws-cdk-lib/aws-iam";
 import { auth } from "./auth/resource";
 import { data } from "./data/resource";
-import { fetchDataDana } from './functions/fetch-data-dana/resource';
 import { myApiFunction } from "./functions/api-function/resource";
-import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 
 const backend = defineBackend({
   auth,
   data,
   myApiFunction,
-  fetchDataDana,
 });
 
 //=============create a new API stack==============
@@ -37,9 +34,6 @@ const myRestApi = new RestApi(apiStack, "RestApi", {
     allowHeaders: Cors.DEFAULT_HEADERS, 
   },
 });
-// ==============Ref Secret ========================
-// Referenciar un secreto existente
-const secretDana = Secret.fromSecretNameV2(apiStack, 'secretDana', 'accessDana');
 
 // ==============Create resource session============
 // create a new Lambda integration
@@ -60,32 +54,6 @@ sessionPath.addProxy({
   anyMethod: true,
   defaultIntegration: lambdaIntegration,
 });
-
-// ==============Create resource data============
-// create a new Lambda integration
-const lambdaIntegrationDana = new LambdaIntegration(
-  backend.fetchDataDana.resources.lambda
-);
-// create a new resource path with IAM authorization
-const dataPath = myRestApi.root.addResource("data", {
-  defaultMethodOptions: {
-    authorizationType: AuthorizationType.IAM,
-  },
-});
-// add methods you would like to create to the resource path
-dataPath.addMethod("GET", lambdaIntegrationDana);
-dataPath.addMethod("POST", lambdaIntegrationDana);
-
-// Otorgar permisos a la Lambda para leer el secreto
-secretDana.grantRead(backend.fetchDataDana.resources.lambda);
-// Rol asociado al Lambda
-const lambdaDataRole = backend.fetchDataDana.resources.lambda.role as Role;
-
-lambdaDataRole.addToPolicy(new PolicyStatement({
-  actions: ["secretsmanager:GetSecretValue"],
-  resources: ["*"],
-}));
-
 
 //================create a new Cognito User Pools authorizer
 const cognitoAuth = new CognitoUserPoolsAuthorizer(apiStack, "CognitoAuth", {
