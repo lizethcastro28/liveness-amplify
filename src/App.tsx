@@ -59,6 +59,7 @@ function App() {
          // if (data && data.record) {
             console.log('----hay datos: ');
               setAddress(getLocation());
+              setNombre("Nombre")
               fetchCreateLiveness();
          // } else {
             //setScreen('dataError');
