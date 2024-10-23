@@ -13,8 +13,6 @@ function App() {
   const [screen, setScreen] = useState<'loading' | 'detector' | 'success' | 'error' | 'notLive' | 'dataError' | 'cancelled' | "dataDocument">('loading');
   const [address, setAddress] = useState("");
   const [nombre, setNombre] = useState("");
-  const [dataDana, setDataDana] = useState(null);
-  const [urlshort, setUrlshort] = useState(null);
 
 
   //==========0. Obtener Geolocalización del dispositivo
@@ -50,39 +48,22 @@ function App() {
     const fetchDataAndProcess = async () => {
       // Obtener parámetros del URL
       const params = new URLSearchParams(window.location.search);
-      const vftk = params.get('vftk');
-      const danaParam = params.get('dana');
+      const chanel = params.get('chanel');
+      const circuit = params.get('circuit');
 
-      if (vftk && danaParam) {
+      if (chanel && circuit) {
         try {
-          // Consulto los datos de la persona en DanaConnect
-          const fetchData = async (danaParam: string, vftk: string) => {
-            const res = await getDataDana(danaParam, vftk); // Esperar a que se resuelva la Promise
-            console.log('-------llamo a dana: ', res);
-            return res; // Asegúrate de retornar el resultado
-          }
+          // Consulto los datos
+          
 
-          const data = await fetchData(danaParam, vftk); // Usa await para obtener el resultado de la Promise
-
-          if (data && data.record) {
+         // if (data && data.record) {
             console.log('----hay datos: ');
-            var imageUrl = obtenerValorCampo(data.record, 'URLSHORT');
-            if (imageUrl) {
               setAddress(getLocation());
-              setNombre(obtenerValorCampo(data.record, 'NOMBRES_Y_APELLIDOS'));
-              setUrlshort(imageUrl);
-              setDataDana(data.record);
-              console.log('dataaaa:', dataDana)
               fetchCreateLiveness();
-            } else {
-              console.log('El urlshort del documento no está en la data');
-              setScreen('dataDocument');
-              setLoading(false);
-            }
-          } else {
-            setScreen('dataError');
-            setLoading(false);
-          }
+         // } else {
+            //setScreen('dataError');
+            //setLoading(false);
+          //}
         } catch (error) {
           console.error('Error fetching data:', error);
           setScreen('error');
@@ -113,28 +94,10 @@ function App() {
   }
 
 
-  const getDataDana = async (danaParam: string, vftkParam: string) => {
-    const path = `data?vftk=${encodeURIComponent(vftkParam)}&dana=${encodeURIComponent(danaParam)}`;
-
-    const restOperation = get({
-      apiName: 'myRestApi',
-      path: path,
-    });
-    const response = (await restOperation.response) as unknown as Response;
-    if (response.body) {
-      const responseBody = await readStream(response.body);
-      return JSON.parse(responseBody);
-    } else {
-      console.log('GET call succeeded but response body is empty');
-      setScreen('error');
-    }
-  }
-
-
   const fetchCreateLiveness = async () => {
     try {
       const restOperation = post({
-        apiName: 'myRestApi',
+        apiName: 'firmaBiometricaApi',
         path: 'session',
       });
       const response = (await restOperation.response) as unknown as Response;
@@ -180,7 +143,7 @@ function App() {
     if (createLivenessApiData) {
       try {
         const restOperation = get({
-          apiName: 'myRestApi',
+          apiName: 'firmaBiometricaApi',
           path: `session/${createLivenessApiData.sessionId}`,
         });
         const response = (await restOperation.response) as unknown as Response;
@@ -240,9 +203,8 @@ function App() {
         </div>
       ) : screen === 'success' ? (
         <div>
-          <h1>Aquí va la comparación contra el Documento</h1>
+          <h1>Aquí continúa el flujo luego de la verificación</h1>
           {address}
-          {urlshort}
         </div>
       ) : screen === 'notLive' ? (
         <div>
