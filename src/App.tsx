@@ -4,7 +4,7 @@ import { post } from 'aws-amplify/data';
 import Body from './components/Body';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { readStream } from './utils/functions';
+import { readStream, fetchBiometricData } from './utils/functions';
 
 
 
@@ -59,8 +59,13 @@ const App = () => {
 
       if (response.body) {
         const responseBody = await readStream(response.body);
-        const token = JSON.parse(responseBody);
-        console.log('-------------oauthResponse: ', token)
+        const responseJson = JSON.parse(responseBody);
+        const accessToken = responseJson.access_token;
+        console.log('-------------oauthResponse: ', accessToken)
+        if (accessToken) {
+          const config = fetchBiometricData(accessToken);
+          console.log('--------------config: ', config)
+        }
       } else {
         console.log('POST oauth error');
       }
