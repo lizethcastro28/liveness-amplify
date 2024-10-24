@@ -78,6 +78,6 @@
 }
 
 .custom-button:active {
-  background-color: #C15A37;
+  background-color: hsl(15, 56%, 49%);
   border-color: #C15A37;
 }
