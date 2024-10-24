@@ -4,7 +4,7 @@ import { post } from 'aws-amplify/data';
 import Body from './components/Body';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { readStream, fetchBiometricData } from './utils/functions';
+import { readStream } from './utils/functions';
 
 
 
@@ -52,19 +52,14 @@ const App = () => {
     try {
       const restOperation = post({
         apiName: 'firmaBiometricaApi',
-        path: 'oauth',
+        path: `config?circuit=${circuit}`,
       });
       const response = (await restOperation.response) as unknown as Response;
 
       if (response.body) {
         const responseBody = await readStream(response.body);
         const responseJson = JSON.parse(responseBody);
-        const accessToken = responseJson.access_token;
-        console.log('-------------oauthResponse: ', accessToken)
-        if (accessToken) {
-          const config = fetchBiometricData(accessToken, circuit);
-          console.log('--------------config: ', config)
-        }
+        console.log('-------------responseJson: ', responseJson)
       } else {
         console.log('POST oauth error');
       }
