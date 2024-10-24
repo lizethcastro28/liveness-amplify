@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://biometric.integrationlayer.com', // Asegúrate de usar HTTPS
+        target: 'http://biometric.integrationlayer.com', // Asegúrate de usar HTTPS
         changeOrigin: true,
         secure: false, // Desactiva la verificación SSL si es necesario
         rewrite: (path) => path.replace(/^\/api/, ''), // Reescribir la ruta
