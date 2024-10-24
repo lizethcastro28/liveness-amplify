@@ -5,7 +5,7 @@ import type { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
 export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
     console.log('----------->>>getAuthToken: ', event)
     try {
-        const session = 'token';
+        const token = 'token';
 
         return {
             statusCode: 200,
@@ -13,7 +13,7 @@ export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayPr
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*"
             },
-            body: JSON.stringify(session)
+            body: JSON.stringify(token)
         };
     } catch (error: unknown) {
         console.error('Error get oauthToken:', error);
