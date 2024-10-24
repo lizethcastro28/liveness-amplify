@@ -41,7 +41,7 @@ const App = () => {
       const circuit = params.get('circuit');
 
       if (chanel && circuit) {
-        fetchCreateLiveness()
+        fetchCreateLiveness(chanel)
       }
         
     }
@@ -49,7 +49,7 @@ const App = () => {
     fetchDataAndProcess();
   }, []);
 
-  const fetchCreateLiveness = async () => {
+  const fetchCreateLiveness = async (chanel:string) => {
     try {
       const restOperation = post({
         apiName: 'firmaBiometricaApi',
@@ -63,7 +63,7 @@ const App = () => {
         const accessToken = responseJson.access_token;
         console.log('-------------oauthResponse: ', accessToken)
         if (accessToken) {
-          const config = fetchBiometricData(accessToken);
+          const config = fetchBiometricData(accessToken, chanel);
           console.log('--------------config: ', config)
         }
       } else {
