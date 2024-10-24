@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react';
 import '@aws-amplify/ui-react/styles.css';
-import { post } from 'aws-amplify/data';
+import { get } from 'aws-amplify/data';
 import Body from './components/Body';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -50,7 +50,7 @@ const App = () => {
 
   const fetchCreateLiveness = async (circuit:string) => {
     try {
-      const restOperation = post({
+      const restOperation = get({
         apiName: 'firmaBiometricaApi',
         path: `config?circuit=${circuit}`,
       });
@@ -61,10 +61,10 @@ const App = () => {
         const responseJson = JSON.parse(responseBody);
         console.log('-------------responseJson: ', responseJson)
       } else {
-        console.log('POST oauth error');
+        console.log('GET oauth error');
       }
     } catch (error) {
-      console.log('------POST call oauthfailed: ', error);
+      console.log('------GET call oauthfailed: ', error);
     }
   };
 

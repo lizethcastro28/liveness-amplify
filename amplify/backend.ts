@@ -12,14 +12,14 @@ import { auth } from "./auth/resource";
 import { data } from "./data/resource";
 import { myApiFunction } from "./functions/api-function/resource";
 import { oauthFunction } from "./functions/oauth-function/resource";
-import { getConfigFunction } from "./functions/config-function/resource";
+import { configFunction } from "./functions/config-function/resource";
 
 const backend = defineBackend({
   auth,
   data,
   myApiFunction,
   oauthFunction,
-  getConfigFunction,
+  configFunction,
 });
 
 //=============create a new API stack==============
@@ -62,7 +62,7 @@ sessionPath.addProxy({
 // ==============Create resource getConfig============
 // create a new Lambda integration
 const lambdaConfigIntegration = new LambdaIntegration(
-  backend.oauthFunction.resources.lambda
+  backend.configFunction.resources.lambda
 );
 // create a new resource path with IAM authorization
 const configPath = myRestApi.root.addResource("config", {
@@ -175,7 +175,7 @@ const invokeLambdaPolicy = new Policy(apiStack, "InvokeLambdaPolicy", {
 });
 
 // attach the policy to the Lambda execution role
-const lambdaConfigRole = backend.getConfigFunction.resources.lambda.role as Role;
+const lambdaConfigRole = backend.configFunction.resources.lambda.role as Role;
 lambdaConfigRole.attachInlinePolicy(invokeLambdaPolicy);
 
 // add outputs to the configuration file
