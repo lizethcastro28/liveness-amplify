@@ -1,7 +1,7 @@
 // utils/apiService.ts
 
 export async function fetchBiometricData(token: string): Promise<any> {
-  const url = 'http://biometric.integrationlayer.com/api/v1/biometric/internal/get_channel/13713848-8259-11ef-989d-2cdb0755c8f0/040d2874-e356-4ed5-9c7b-e44d96da2928';
+  const url = 'https://biometric.integrationlayer.com/api/v1/biometric/internal/get_channel/13713848-8259-11ef-989d-2cdb0755c8f0/040d2874-e356-4ed5-9c7b-e44d96da2928';
 
   try {
       const response = await fetch(url, {
