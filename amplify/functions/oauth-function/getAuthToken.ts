@@ -30,9 +30,9 @@ export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayPr
             body: body.toString(),
         });
 
+        // Verifica si la respuesta es exitosa
         if (!response.ok) {
-            const errorResponse = await response.text();
-            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorResponse}`);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();

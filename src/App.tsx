@@ -4,7 +4,7 @@ import { post } from 'aws-amplify/data';
 import Body from './components/Body';
 import Header from './components/Header';
 import Footer from './components/Footer';
-//import { fetchData } from './utils/apiService';
+import { readStream } from './utils/functions';
 
 
 
@@ -57,8 +57,10 @@ const App = () => {
       });
       const response = (await restOperation.response) as unknown as Response;
 
-      if (response) {
-        console.log('-------------oauthResponse: ', response.body)
+      if (response.body) {
+        const responseBody = await readStream(response.body);
+        const token = JSON.parse(responseBody);
+        console.log('-------------oauthResponse: ', token)
       } else {
         console.log('POST oauth error');
       }
