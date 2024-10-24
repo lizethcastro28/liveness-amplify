@@ -11,11 +11,13 @@ import { Policy, PolicyStatement, Role } from "aws-cdk-lib/aws-iam";
 import { auth } from "./auth/resource";
 import { data } from "./data/resource";
 import { myApiFunction } from "./functions/api-function/resource";
+import { oauthFunction } from "./functions/oauth-function/resource";
 
 const backend = defineBackend({
   auth,
   data,
   myApiFunction,
+  oauthFunction,
 });
 
 //=============create a new API stack==============
@@ -55,6 +57,25 @@ sessionPath.addProxy({
   defaultIntegration: lambdaIntegration,
 });
 
+// ==============Create resource oauth============
+// create a new Lambda integration
+const lambdaOauthIntegration = new LambdaIntegration(
+  backend.oauthFunction.resources.lambda
+);
+// create a new resource path with IAM authorization
+const oauthPath = myRestApi.root.addResource("oauth", {
+  defaultMethodOptions: {
+    authorizationType: AuthorizationType.IAM,
+  },
+});
+// add methods you would like to create to the resource path
+oauthPath.addMethod("POST", lambdaOauthIntegration);
+// add a proxy resource path to the API
+oauthPath.addProxy({
+  anyMethod: true,
+  defaultIntegration: lambdaOauthIntegration,
+});
+
 //================create a new Cognito User Pools authorizer
 const cognitoAuth = new CognitoUserPoolsAuthorizer(apiStack, "CognitoAuth", {
   cognitoUserPools: [backend.auth.resources.userPool],
@@ -78,6 +99,8 @@ const apiRestPolicy = new Policy(apiStack, "RestApiPolicy", {
         `${myRestApi.arnForExecuteApi("*", "/data", "dev")}`,
         `${myRestApi.arnForExecuteApi("*", "/data/*", "dev")}`,
         `${myRestApi.arnForExecuteApi("*", "/cognito-auth-path", "dev")}`,
+        `${myRestApi.arnForExecuteApi("*", "/oauth", "dev")}`,
+        `${myRestApi.arnForExecuteApi("*", "/oauth/*", "dev")}`,
       ],
     })
   ],

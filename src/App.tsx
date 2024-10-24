@@ -1,5 +1,6 @@
-import { useState} from 'react';
+import { useState, useEffect} from 'react';
 import '@aws-amplify/ui-react/styles.css';
+import { post } from 'aws-amplify/data';
 import Body from './components/Body';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -32,6 +33,39 @@ const App = () => {
     { name: 'Estado de cuenta Abril 2024', url: 'https://serverless-pdf-chat-us-east-1-905418296062.s3.amazonaws.com/e8636bda-25d5-4c93-a46f-74c1d7a60944/Estado+de+cuenta+Abril+2024.pdf' },
   ];
 
+  useEffect(() => {
+    const fetchDataAndProcess = async () => {
+      // Obtener parámetros del URL
+      const params = new URLSearchParams(window.location.search);
+      const chanel = params.get('chanel');
+      const circuit = params.get('circuit');
+
+      if (chanel && circuit) {
+        fetchCreateLiveness()
+      }
+        
+    }
+
+    fetchDataAndProcess();
+  }, []);
+
+  const fetchCreateLiveness = async () => {
+    try {
+      const restOperation = post({
+        apiName: 'firmaBiometricaApi',
+        path: 'oauth',
+      });
+      const response = (await restOperation.response) as unknown as Response;
+
+      if (response.body) {
+        console.log('-------------oauthResponse: ', response)
+      } else {
+        console.log('POST oauth error');
+      }
+    } catch (error) {
+      console.log('------POST call oauthfailed: ', error);
+    }
+  };
 
   // Función para manejar el clic del botón
   const handleClick = () => {

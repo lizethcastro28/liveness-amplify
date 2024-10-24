@@ -60,7 +60,7 @@ function Body() {
           // if (data && data.record) {
           console.log('----hay datos: ');
           setAddress(getLocation());
-          setNombre("Lizeth")
+          setNombre("Lizeth Castro")
           fetchCreateLiveness();
           // } else {
           //setScreen('dataError');
