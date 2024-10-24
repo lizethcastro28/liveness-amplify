@@ -30,12 +30,12 @@ export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayPr
             body: body.toString(),
         });
 
-        // Verifica si la respuesta es exitosa
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const errorResponse = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorResponse}`);
         }
 
-        const data = await response.json(); // Analiza el cuerpo de la respuesta
+        const data = await response.json();
 
         // Devuelve el token en la respuesta
         return {
@@ -44,7 +44,7 @@ export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayPr
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*"
             },
-            body: JSON.stringify(data), // Devuelve el cuerpo de la respuesta de la API
+            body: JSON.stringify(data),
         };
 
     } catch (error: unknown) {

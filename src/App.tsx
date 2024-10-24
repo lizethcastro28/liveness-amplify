@@ -57,8 +57,8 @@ const App = () => {
       });
       const response = (await restOperation.response) as unknown as Response;
 
-      if (response.body) {
-        console.log('-------------oauthResponse: ', response)
+      if (response) {
+        console.log('-------------oauthResponse: ', response.body)
       } else {
         console.log('POST oauth error');
       }
