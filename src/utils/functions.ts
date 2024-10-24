@@ -1,28 +1,28 @@
 // utils/apiService.ts
 
-export async function fetchBiometricData(token: string, chanel: string): Promise<any> {
-  const url = 'http://biometric.integrationlayer.com/api/v1/biometric/internal/get_channel/'+ chanel;
+export async function fetchBiometricData(token: string, circuit: string): Promise<any> {
+  const url = 'http://biometric.integrationlayer.com/api/v1/biometric/internal/get_channel/' + circuit;
 
   try {
-      const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/zip', 
-          },
-      });
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/zip',
+      },
+    });
 
-      // Verifica si la respuesta es exitosa
-      if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+    // Verifica si la respuesta es exitosa
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-      const data = await response.json(); 
-      return data; 
+    const data = await response.json();
+    return data;
 
   } catch (error) {
-      console.error('Error al llamar al servicio:', error);
-      throw error; 
+    console.error('Error al llamar al servicio:', error);
+    throw error;
   }
 }
 

@@ -12,12 +12,14 @@ import { auth } from "./auth/resource";
 import { data } from "./data/resource";
 import { myApiFunction } from "./functions/api-function/resource";
 import { oauthFunction } from "./functions/oauth-function/resource";
+import { getConfigFunction } from "./functions/config-function/resource";
 
 const backend = defineBackend({
   auth,
   data,
   myApiFunction,
   oauthFunction,
+  getConfigFunction,
 });
 
 //=============create a new API stack==============
@@ -55,6 +57,25 @@ sessionPath.addMethod("POST", lambdaIntegration);
 sessionPath.addProxy({
   anyMethod: true,
   defaultIntegration: lambdaIntegration,
+});
+
+// ==============Create resource getConfig============
+// create a new Lambda integration
+const lambdaConfigIntegration = new LambdaIntegration(
+  backend.oauthFunction.resources.lambda
+);
+// create a new resource path with IAM authorization
+const configPath = myRestApi.root.addResource("config", {
+  defaultMethodOptions: {
+    authorizationType: AuthorizationType.IAM,
+  },
+});
+// add methods you would like to create to the resource path
+configPath.addMethod("GET", lambdaConfigIntegration);
+// add a proxy resource path to the API
+configPath.addProxy({
+  anyMethod: true,
+  defaultIntegration: lambdaConfigIntegration,
 });
 
 // ==============Create resource oauth============
@@ -101,6 +122,8 @@ const apiRestPolicy = new Policy(apiStack, "RestApiPolicy", {
         `${myRestApi.arnForExecuteApi("*", "/cognito-auth-path", "dev")}`,
         `${myRestApi.arnForExecuteApi("*", "/oauth", "dev")}`,
         `${myRestApi.arnForExecuteApi("*", "/oauth/*", "dev")}`,
+        `${myRestApi.arnForExecuteApi("*", "/config", "dev")}`,
+        `${myRestApi.arnForExecuteApi("*", "/config/*", "dev")}`,
       ],
     })
   ],
@@ -139,6 +162,21 @@ const rekognitionAndS3Policy = new Policy(apiStack, "RekognitionAndS3Policy", {
 // attach the policy to the Lambda execution role
 const lambdaRole = backend.myApiFunction.resources.lambda.role as Role;
 lambdaRole.attachInlinePolicy(rekognitionAndS3Policy);
+
+const invokeLambdaPolicy = new Policy(apiStack, "InvokeLambdaPolicy", {
+  statements: [
+    new PolicyStatement({
+      actions: ["lambda:InvokeFunction"],
+      resources: [
+        "*"
+      ],
+    }),
+  ],
+});
+
+// attach the policy to the Lambda execution role
+const lambdaConfigRole = backend.getConfigFunction.resources.lambda.role as Role;
+lambdaConfigRole.attachInlinePolicy(invokeLambdaPolicy);
 
 // add outputs to the configuration file
 backend.addOutput({

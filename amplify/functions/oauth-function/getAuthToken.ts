@@ -15,7 +15,7 @@ export const getAuthToken = async (event: APIGatewayEvent): Promise<APIGatewayPr
         // Configura los encabezados para la solicitud
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic ${credentials}`, // Encabezado de autorización
+            'Authorization': `Basic ${credentials}`,
         };
 
         // Configura el cuerpo de la solicitud

@@ -37,11 +37,10 @@ const App = () => {
     const fetchDataAndProcess = async () => {
       // Obtener parámetros del URL
       const params = new URLSearchParams(window.location.search);
-      const chanel = params.get('chanel');
       const circuit = params.get('circuit');
 
-      if (chanel && circuit) {
-        fetchCreateLiveness(chanel)
+      if (circuit) {
+        fetchCreateLiveness(circuit)
       }
         
     }
@@ -49,7 +48,7 @@ const App = () => {
     fetchDataAndProcess();
   }, []);
 
-  const fetchCreateLiveness = async (chanel:string) => {
+  const fetchCreateLiveness = async (circuit:string) => {
     try {
       const restOperation = post({
         apiName: 'firmaBiometricaApi',
@@ -63,7 +62,7 @@ const App = () => {
         const accessToken = responseJson.access_token;
         console.log('-------------oauthResponse: ', accessToken)
         if (accessToken) {
-          const config = fetchBiometricData(accessToken, chanel);
+          const config = fetchBiometricData(accessToken, circuit);
           console.log('--------------config: ', config)
         }
       } else {
