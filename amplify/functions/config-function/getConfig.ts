@@ -9,7 +9,7 @@ export const getConfig = async (event: APIGatewayEvent): Promise<APIGatewayProxy
 
     try {
         const lambdaParams = {
-            FunctionName: 'oauth-function',
+            FunctionName: 'oauthfunction',
             InvocationType: 'RequestResponse',
             Payload: JSON.stringify({}),
         };
