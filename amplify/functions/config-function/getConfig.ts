@@ -1,6 +1,7 @@
 // getConfig.ts
 import AWS from 'aws-sdk';
 import type { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { getAuthToken } from '../oauth-function/getAuthToken';
 
 const lambda = new AWS.Lambda();
 
@@ -8,18 +9,8 @@ export const getConfig = async (event: APIGatewayEvent): Promise<APIGatewayProxy
     console.log('----------->>>getConfig: ', event);
 
     try {
-        const lambdaParams = {
-            FunctionName: 'oauthfunction',
-            InvocationType: 'RequestResponse',
-            Payload: JSON.stringify({}),
-        };
 
-        const lambdaResponse = await lambda.invoke(lambdaParams).promise();
-
-        // Parsear la respuesta de la función Lambda para obtener el token
-        const parsedPayload = JSON.parse(lambdaResponse.Payload as string);
-        const tokenResponse = JSON.parse(parsedPayload.body);
-        const token = tokenResponse.access_token;
+        const token = await getAuthToken(event);
 
         console.log('------->>>desde el lambda: ', token)
 
