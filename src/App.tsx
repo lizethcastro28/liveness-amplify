@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import '@aws-amplify/ui-react/styles.css';
 import { get } from 'aws-amplify/data';
 import Body from './components/Body';
@@ -25,7 +25,7 @@ const App = () => {
       color: '',
       location: '',
     });*/
-  
+
 
 
   // Documentos PDF
@@ -42,31 +42,36 @@ const App = () => {
       if (circuit) {
         fetchCreateLiveness(circuit)
       }
-        
+
     }
 
     fetchDataAndProcess();
   }, []);
 
-  const fetchCreateLiveness = async (circuit:string) => {
+  const fetchCreateLiveness = async (circuit: string) => {
     try {
+      // Llamada GET a la API
       const restOperation = get({
         apiName: 'firmaBiometricaApi',
         path: `config?circuit=${circuit}`,
       });
+
+      // Esperar la respuesta de la operación REST
       const response = (await restOperation.response) as unknown as Response;
 
+      // Verifica si la respuesta tiene cuerpo
       if (response.body) {
         const responseBody = await readStream(response.body);
         const responseJson = JSON.parse(responseBody);
-        console.log('-------------responseJson: ', responseJson)
+        console.log('-------------responseJson: ', responseJson);
       } else {
-        console.log('GET oauth error');
+        console.log('GET oauth error: No response body');
       }
     } catch (error) {
-      console.log('------GET call oauthfailed: ', error);
+      console.log('------GET call config: ', error instanceof Error ? error.message : error);
     }
   };
+
 
   // Función para manejar el clic del botón
   const handleClick = () => {
@@ -107,10 +112,10 @@ const App = () => {
         {showBody && <Body />}
       </div>
       <Footer
-      text="My Footer"
-      color="#0c6069"
-      location="center"
-    />
+        text="My Footer"
+        color="#0c6069"
+        location="center"
+      />
     </>
   );
 };

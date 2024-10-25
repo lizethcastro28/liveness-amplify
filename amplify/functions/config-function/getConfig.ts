@@ -8,9 +8,8 @@ export const getConfig = async (event: APIGatewayEvent): Promise<APIGatewayProxy
     console.log('----------->>>getConfig: ', event);
 
     try {
-        // Llamar a la función Lambda `getAuthToken` para obtener el token
         const lambdaParams = {
-            FunctionName: 'getAuthToken',
+            FunctionName: 'oauthFunction',
             InvocationType: 'RequestResponse',
             Payload: JSON.stringify({}),
         };
